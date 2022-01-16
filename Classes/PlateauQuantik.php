@@ -17,11 +17,6 @@ class PlateauQuantik
     }
     public function getPiece(int $rowNum,int $colNum):PieceQuantik{
         $ap = new ArrayPieceQuantik();
-        for ($rowNum=1;$rowNum<=self::NBROWS;$rowNum++){
-            for ($colNum=1;$colNum<=self::NBCOLS;$colNum++){
-                $this->cases[$colNum][$rowNum] = $ap->getPiecesQuantiks();
-            }
-        }
     }
     public function setPiece(int $rowNum,int $colNum,PieceQuantik $p): void
     {

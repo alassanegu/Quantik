@@ -11,41 +11,49 @@ class ArrayPieceQuantik
         $this->taille = 0;
         $this->piecesQuantiks = array();
     }
-    public function __toString():string {
+    public function __toString() : string
+    {
         $s = "";
-        foreach ($this->piecesQuantiks as $val){
-            $s = " ".$val;
+        $j = 0;
+        foreach ($this->piecesQuantiks as $val) {
+            $s = $s."Element [".$j."] = ".$val."</br>";
+            $j++;
         }
         return $s;
     }
 
-    public function getPiecesQuantiks(int $pos): PieceQuantik
+    public function getPiecesQuantiks(int $pos) : PieceQuantik
     {
         return $this->piecesQuantiks[$pos];
     }
-    public function setPiecesQuantiks(int $pos,PieceQuantik $piecesQuantiks): void
+
+    public function setPiecesQuantiks(int $pos, PieceQuantik $piecesQuantiks) : void
     {
         $this->piecesQuantiks[$pos] = $piecesQuantiks;
     }
-    public function getTaille(): int
+
+    public function getTaille() : int
     {
         return $this->taille;
     }
-    public function setTaille(int $taille): void
+
+    public function setTaille(int $taille) : void
     {
         $this->taille = $taille;
     }
 
-    public function addPieceQuantik(PieceQuantik $piece):void{
+    public function addPieceQuantik(PieceQuantik $piece) : void
+    {
         $this->piecesQuantiks[$this->taille]=$piece;
         $this->taille++;
     }
 
-    public function removePieceQuantik(int $pos):void{
+    public function removePieceQuantik(int $pos) : void
+    {
         //Cette fonction peut supprimer une valeur à la fois.
         // Le nom du tableau avec l’index de l’élément ($tab[1]) est passé en paramètre.
         // Cette fonction ne modifie pas les valeurs d’index. Les valeurs d’index restent les mêmes qu’avant.
-        if (in_array($this->piecesQuantiks[$pos],$this->piecesQuantiks)){
+        if ($pos < $this->taille){
             unset($this->piecesQuantiks[$pos]);
             $this->taille --;
         }else{
@@ -54,7 +62,8 @@ class ArrayPieceQuantik
 
     }
 
-    public static function initPiecesNoires():ArrayPieceQuantik{
+    public static function initPiecesNoires() : ArrayPieceQuantik
+    {
         $a = new ArrayPieceQuantik();
         $a->addPieceQuantik(PieceQuantik::initBlackCone());
         $a->addPieceQuantik(PieceQuantik::initBlackCube());
@@ -64,13 +73,11 @@ class ArrayPieceQuantik
         $a->addPieceQuantik(PieceQuantik::initBlackCube());
         $a->addPieceQuantik(PieceQuantik::initBlackCylindre());
         $a->addPieceQuantik(PieceQuantik::initBlackSphere());
-
-
         return $a;
-
     }
 
-    public static function initPiecesBlanches():ArrayPieceQuantik{
+    public static function initPiecesBlanches() : ArrayPieceQuantik
+    {
         $a = new ArrayPieceQuantik();
         $a->addPieceQuantik(PieceQuantik::initWhiteCone());
         $a->addPieceQuantik(PieceQuantik::initWhiteCone());
@@ -84,16 +91,14 @@ class ArrayPieceQuantik
     }
 
 }
-$arayPiece = new ArrayPieceQuantik();
 
-$arayPiece->addPieceQuantik(PieceQuantik::initBlackCube());
-$arayPiece->addPieceQuantik(PieceQuantik::initWhiteCone());
-$arayPiece->addPieceQuantik(PieceQuantik::initWhiteSphere());
-$arayPiece->removePieceQuantik(4);
-
-//print_r(ArrayPieceQuantik::initPiecesNoires());
+//$arayPiece = new ArrayPieceQuantik();
+//$arayPiece->addPieceQuantik(PieceQuantik::initBlackCube());
+//$arayPiece->addPieceQuantik(PieceQuantik::initWhiteCone());
+//$arayPiece->addPieceQuantik(PieceQuantik::initWhiteSphere());
 //echo $arayPiece;
-
-print_r($arayPiece) ;
+//$arayPiece->removePieceQuantik(1);
+//echo $arayPiece;
+//print_r(ArrayPieceQuantik::initPiecesNoires());
 
 ?>

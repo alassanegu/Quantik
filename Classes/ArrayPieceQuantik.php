@@ -55,7 +55,7 @@ class ArrayPieceQuantik
         // Cette fonction ne modifie pas les valeurs d’index. Les valeurs d’index restent les mêmes qu’avant.
         if ($pos < $this->taille){
             unset($this->piecesQuantiks[$pos]);
-            $this->taille --;
+            $this->taille--;
         }else{
             echo "indices non Trouve"."</br>";
         }

@@ -34,25 +34,24 @@ class ActionQuantik
         return ActionQuantik::isComboValide($temp);
     }
 
-//    public function isValidePose(int $rowNum, int $colNum, PieceQuantik $piece) : bool
-//    {
-//        $result = false;
-//        if($this->plateau[$rowNum][$colNum] == null)
-//            $result true;
-//        else
-//            return false;
-//
-//        if(!$this->isPoseValide(, $piece)){
-//
-//        }
-//    return true;
-//    }
+    public function isValidePose(int $rowNum, int $colNum, PieceQuantik $piece) : bool
+    {
+        $bool = false;
+        $p = $this->plateau->getPiece($rowNum,$colNum);
+        if($p->getCouleur() == 0 && $p->getForme() == 0){
+            $bool = true;
+        }
 
-//    public function posePiece(int $rowNum, int $colNum, PieceQuantik $piece) : void
-//    {
-//
-//    }
-//
+        return $bool;
+    }
+
+    public function posePiece(int $rowNum, int $colNum, PieceQuantik $piece) : void
+    {
+        if($this->isValidePose($rowNum,$colNum,$piece) == true){
+            $this->plateau->setPiece($rowNum,$colNum,$piece);
+        }
+    }
+
     public function __toString() : string
     {
         return $this->plateau;
@@ -75,8 +74,32 @@ class ActionQuantik
 
     private static function isPieceValide(ArrayPieceQuantik $pieces, PlateauQuantik $p) : bool
     {
-
-        return true;
+        $bool = false;
+        for($i = 0; $i < $p::NBROWS;$i++){
+            for ($j = 0;$j <$pieces->getTaille();$j++){
+                if($pieces[$j] == $p->getRow($i)[$j]){
+                    $bool = false;
+                }
+                $bool = true;
+            }
+        }
+        for($i = 0; $i < $p::NBCOLS;$i++){
+            for ($j = 0;$j <$pieces->getTaille();$j++){
+                if($pieces[$j] == $p->getCol($i)[$j]){
+                    $bool = false;
+                }
+                $bool = true;
+            }
+        }
+        for($i = 0; $i < 4;$i++){
+            for ($j = 0;$j <$pieces->getTaille();$j++){
+                if($pieces[$j] == $p->getCorner($i)[$j]){
+                    $bool = false;
+                }
+                $bool = true;
+            }
+        }
+        return $bool;
     }
 }
 

@@ -5,7 +5,7 @@ require "PlateauQuantik.php";
 // Cette classe gère les méthodes gérant les règles du jeu.
 class ActionQuantik
 {
-    protected PlateauQuantik $plateau;
+    protected $plateau;
 
     // Le constructeur prend en parametre un plateau et l'initialise a la variable plateau
     public function __construct(PlateauQuantik $plateau)

@@ -91,5 +91,7 @@ class PieceQuantik {
         return new PieceQuantik(self::SPHERE,self::BLACK);
     }
 }
-
+// //Test du classe PieceQuantik
+//echo PieceQuantik::initBlackCube();
+//echo PieceQuantik::initVoid();
 ?>

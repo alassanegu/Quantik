@@ -1,6 +1,8 @@
 <?php
+
 require "ArrayPieceQuantik.php";
 
+// Cette classe gère un plateau de jeu.
 class PlateauQuantik
 {
     public const NW = 0;
@@ -13,7 +15,9 @@ class PlateauQuantik
 
     protected $cases;
 
-    public function __construct(){
+    // Le constructeur sans parametre initialise la variable cases qui est une matrice de piece quantik avec des pieces quantik vide
+    public function __construct()
+    {
         $this->cases = array();
         for($i = 0; $i < self::NBROWS; $i++){
             for($j = 0; $j < self::NBCOLS; $j++){
@@ -22,16 +26,19 @@ class PlateauQuantik
         }
     }
 
+    // Le getteur getPiece prend en parametre un numero de ligne et un numero de colonne puis retounre la valeur du PieceQuantik a cette position.
     public function getPiece(int $rowNum, int $colNum) : PieceQuantik
     {
         return $this->cases[$rowNum][$colNum];
     }
 
+    // Le setteur setPiece prend en parametre un numero de ligne, un numero de colonne et ume piece quantik puis affecte la piece a la position dans cases.
     public function setPiece(int $rowNum, int $colNum, PieceQuantik $p) : void
     {
         $this->cases[$rowNum][$colNum] = $p;
     }
 
+    // Le getteur getRow prend en parametre un numero de ligne et retounre un ArrayPieceQuantik correspondant a ce ligne dans cases.
     public function getRow(int $numRow) : ArrayPieceQuantik
     {
         $a = new ArrayPieceQuantik();
@@ -41,6 +48,7 @@ class PlateauQuantik
         return $a;
     }
 
+    // Le getteur getCol prend en parametre un numero de colonne et retounre un ArrayPieceQuantik correspondant a ce colonne dans cases.
     public function getCol(int $numCol) : ArrayPieceQuantik
     {
         $a = new ArrayPieceQuantik();
@@ -50,25 +58,26 @@ class PlateauQuantik
         return $a;
     }
 
+    // Le getteur getCorner prend en parametre un numero et verifie dabord de quelle corner s'agit il puis retounre un ArrayPieceQuantik correspondant a ce corner dans cases.
     public function getCorner(int $dir) : ArrayPieceQuantik
     {
         $a = new ArrayPieceQuantik();
-        if($dir == 0){
+        if($dir == self::NW){
             $a->setPiecesQuantiks(0, $this->cases[0][0]);
             $a->setPiecesQuantiks(1, $this->cases[0][1]);
             $a->setPiecesQuantiks(2, $this->cases[1][0]);
             $a->setPiecesQuantiks(3, $this->cases[1][1]);
-        } else if($dir == 1){
+        } else if($dir == self::NE){
             $a->setPiecesQuantiks(0, $this->cases[0][2]);
             $a->setPiecesQuantiks(1, $this->cases[0][3]);
             $a->setPiecesQuantiks(2, $this->cases[1][2]);
             $a->setPiecesQuantiks(3, $this->cases[1][3]);
-        }else if($dir == 2){
+        }else if($dir == self::SW){
             $a->setPiecesQuantiks(0, $this->cases[2][0]);
             $a->setPiecesQuantiks(1, $this->cases[2][1]);
             $a->setPiecesQuantiks(2, $this->cases[3][0]);
             $a->setPiecesQuantiks(3, $this->cases[3][1]);
-        }else if($dir == 3){
+        }else if($dir == self::SE){
             $a->setPiecesQuantiks(0, $this->cases[2][2]);
             $a->setPiecesQuantiks(1, $this->cases[2][3]);
             $a->setPiecesQuantiks(2, $this->cases[3][2]);
@@ -76,7 +85,12 @@ class PlateauQuantik
         }
         return $a;
     }
-    public function __toString():string{
+
+    // La fonction __toString() qui est redefini permet d'avoir un affichage plus parlant.
+    // Ainsi elle va parcourir les pieces quantik qui sont dans l'attribut cases et va stocker dans une chaine des valeurs permettant l'affichage.
+    // Apres elle retourne la chaine contenant la valeur a affiche.
+    public function __toString() : string
+    {
         $s = "";
         $i = 0;
         $j = 0;
@@ -91,6 +105,8 @@ class PlateauQuantik
         }
         return $s;
     }
+
+    // Le getteur getCornerFromCoord prend en parametre un numero de ligne et un numero de colonne puis retounre le coorner correspondant.
     public static function getCornerFromCoord(int $rowNum, int $colNum) : int{
         $retour = 0;
         if($rowNum == 0 || $rowNum == 1){
@@ -108,24 +124,4 @@ class PlateauQuantik
     }
 }
 
-//$platPiece = new PlateauQuantik();
-//$arrNoire = ArrayPieceQuantik::initPiecesNoires();
-//$arrBlanche = ArrayPieceQuantik::initPiecesBlanches();
-//$platPiece->setPiece(0,0, $arrNoire->getPiecesQuantiks(0));
-//$platPiece->setPiece(0,1, $arrNoire->getPiecesQuantiks(1));
-//$platPiece->setPiece(0,2, $arrNoire->getPiecesQuantiks(2));
-//$platPiece->setPiece(0,3, $arrNoire->getPiecesQuantiks(3));
-//$platPiece->setPiece(1,0, $arrBlanche->getPiecesQuantiks(0));
-//$platPiece->setPiece(1,1, $arrBlanche->getPiecesQuantiks(1));
-//$platPiece->setPiece(1,2, $arrBlanche->getPiecesQuantiks(2));
-//$platPiece->setPiece(1,3, $arrBlanche->getPiecesQuantiks(3));
-//$platPiece->setPiece(2,0, $arrNoire->getPiecesQuantiks(4));
-//$platPiece->setPiece(2,1, $arrNoire->getPiecesQuantiks(5));
-//$platPiece->setPiece(2,2, $arrNoire->getPiecesQuantiks(6));
-//$platPiece->setPiece(2,3, $arrNoire->getPiecesQuantiks(7));
-//$platPiece->setPiece(3,0, $arrBlanche->getPiecesQuantiks(4));
-//$platPiece->setPiece(3,1, $arrBlanche->getPiecesQuantiks(5));
-//$platPiece->setPiece(3,2, $arrBlanche->getPiecesQuantiks(6));
-//$platPiece->setPiece(3,3, $arrBlanche->getPiecesQuantiks(7));
-//echo $platPiece;
-//echo PlateauQuantik::getCornerFromCoord(2,2);
+?>

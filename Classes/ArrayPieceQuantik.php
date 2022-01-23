@@ -9,6 +9,7 @@ class ArrayPieceQuantik
     protected $taille;
 
     // Le constructeur sans parametre initialise taille a 0 et piecesQuantik comme un tableau vide
+
     public function __construct()
     {
         $this->taille = 0;
@@ -82,12 +83,12 @@ class ArrayPieceQuantik
     {
         $a = new ArrayPieceQuantik();
         $a->addPieceQuantik(PieceQuantik::initBlackCone());
-        $a->addPieceQuantik(PieceQuantik::initBlackCube());
-        $a->addPieceQuantik(PieceQuantik::initBlackCylindre());
-        $a->addPieceQuantik(PieceQuantik::initBlackSphere());
         $a->addPieceQuantik(PieceQuantik::initBlackCone());
         $a->addPieceQuantik(PieceQuantik::initBlackCube());
+        $a->addPieceQuantik(PieceQuantik::initBlackCube());
         $a->addPieceQuantik(PieceQuantik::initBlackCylindre());
+        $a->addPieceQuantik(PieceQuantik::initBlackCylindre());
+        $a->addPieceQuantik(PieceQuantik::initBlackSphere());
         $a->addPieceQuantik(PieceQuantik::initBlackSphere());
         return $a;
     }
@@ -98,12 +99,13 @@ class ArrayPieceQuantik
         $a = new ArrayPieceQuantik();
         $a->addPieceQuantik(PieceQuantik::initWhiteCone());
         $a->addPieceQuantik(PieceQuantik::initWhiteCone());
-        $a->addPieceQuantik(PieceQuantik::initWhiteSphere());
-        $a->addPieceQuantik(PieceQuantik::initWhiteSphere());
         $a->addPieceQuantik(PieceQuantik::initWhiteCube());
         $a->addPieceQuantik(PieceQuantik::initWhiteCube());
         $a->addPieceQuantik(PieceQuantik::initWhiteCylindre());
         $a->addPieceQuantik(PieceQuantik::initWhiteCylindre());
+        $a->addPieceQuantik(PieceQuantik::initWhiteSphere());
+        $a->addPieceQuantik(PieceQuantik::initWhiteSphere());
+
         return $a;
     }
 

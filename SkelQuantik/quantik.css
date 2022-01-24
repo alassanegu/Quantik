@@ -1,14 +1,16 @@
 :root {
     --bg-title: #F2F0EB;
-    --btn-active: #000077;
+    --btn-active: #6a9fe5;
     --btn-disabled: #EEE;
-    --btn: #33AA33;
-    --btn-undo: #FF3333;
+    --btn: rgba(89, 218, 89, 0.8);
+    --btn-undo: rgba(238, 39, 34, 0.96);
 }
 
 html, body {
     padding: 0;
-    margin: 0;
+    margin: auto;
+    width: 85%;
+    background-color: aqua;
 }
 
 .quantik-title {
@@ -18,11 +20,13 @@ html, body {
     padding: 1rem;
 }
 
-.quantik { margin-top: 2rem; }
+.quantik {
+    margin-top: 2rem;
+}
 
 .quantik div  {
     text-align: center;
-    border-top: 1px solid #000;
+    /*border-top: 1px solid #000;*/
     padding-top: 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid #000;
@@ -40,7 +44,7 @@ html, body {
     border-radius: 2rem;
     border: 1px solid #666;
     padding: 1.5rem 5rem;
-    box-shadow: inset 0px -10px 3px #009900;
+    box-shadow: inset 0px -10px 3px #32a932;
 }
 
 .quantik-btn:active {
@@ -103,3 +107,29 @@ html, body {
    opacity: 0;
   }
 }
+
+.quantikDispo{
+    border: 1px solid;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px  1px;
+}
+.quantikSelect{
+    border: 1px solid;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px  1px;
+}
+.quantik-Plateau{
+    border: 1px solid;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px  1px;
+}
+.quantikDivPlateau{
+    border: 1px solid;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px  1px;
+}
+

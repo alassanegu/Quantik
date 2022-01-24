@@ -1,114 +1,146 @@
-<?php
+<?php 
 
-require "PlateauQuantik.php";
+    namespace quantik\metier;
+    
+    require_once("../Classes/PlateauQuantik.php");
+    require_once("../Classes/PieceQuantik.php"); //require facultatif.
+    
+     use quantik\metier\PlateauQuantik;
+     use quantik\metier\PieceQuantik;
+    
 
-// Cette classe gère les méthodes gérant les règles du jeu.
-class ActionQuantik
-{
-    protected $plateau;
-
-    // Le constructeur prend en parametre un plateau et l'initialise a la variable plateau
-    public function __construct(PlateauQuantik $plateau)
-    {
-        $this->plateau = $plateau;
-    }
-
-    // Le getteur getPlateau returne le plateau
-    public function getPlateau() : PlateauQuantik
-    {
-        return $this->plateau;
-    }
-
-    // La fonction isRowWin prend en parametre un numero de ligne et returne true si cette ligne est gagnant et false sinon.
-    // Elle utilise la fonction isComboValide pour les verifications
-    public function isRowWin(int $numRow) : bool
-    {
-        $temp = ($this->plateau)->getRow($numRow);
-        return ActionQuantik::isComboValide($temp);
-    }
-
-    // La fonction isColWin prend en parametre un numero de colonne et returne true si cette colonne est gagnant et false sinon.
-    // Elle utilise la fonction isComboValide pour les verifications
-    public function isColWin(int $numCol) : bool
-    {
-        $temp = ($this->plateau)->getCol($numCol);
-        return ActionQuantik::isComboValide($temp);
-    }
-
-    // La fonction isCornerWin prend en parametre un numero corner et returne true si cette corner est gagnant et false sinon.
-    // Elle utilise la fonction isComboValide pour les verifications
-    public function isCornerWin(int $dir) : bool
-    {
-        $temp = ($this->plateau)->getCorner($dir);
-        return ActionQuantik::isComboValide($temp);
-    }
-
-    // La fonction isValidePose prend en parametre  un numero de ligne, un numero de colonne et ume piece quantik.
-    // Elle verifie si la position qu'on veut ajouter la piece est vide ou pas.
-    // Et ensuite si c'est vide, utilise la fonction isPieceValide pour verifier si la forme est posable.
-    // returne true si les 2 verification sont vrai et false sinon.
-    public function isValidePose(int $rowNum, int $colNum, PieceQuantik $piece) : bool
-    {
-        $row = $this->plateau->getRow($rowNum);
-        $col = $this->plateau->getCol($colNum);
-        $dir = $this->plateau->getCornerFromCoord($rowNum,$colNum);
-        $corner = $this->plateau->getCorner($dir);
-        if($this->isPieceValide($row, $piece) && $this->isPieceValide($col, $piece) && $this->isPieceValide($corner, $piece)) {
-            return false;
+    class ActionQuantik {
+    
+        /**
+          * $plateauQuantik : objet PlateauQuantik permettant l'accès et la modification du plateau de jeu.
+          * @access protected
+          * @var PlateauQuantik
+          */ 
+        protected $plateauQuantik;
+        
+        /**
+         * Constructeur
+         * @access public
+         */
+        public function __construct(PlateauQuantik $plateau) 
+        {
+            $this->plateauQuantik = $plateau;
         }
-        return true;
-    }
-
-    // La fonction posePiece prend en parametre  un numero de ligne, un numero de colonne et ume piece quantik.
-    // Elle utilise la fonction isValidePose pour verifie si la piece est posable ou pas.
-    // Si oui elle pose sinon elle pose pas
-    public function posePiece(int $rowNum, int $colNum, PieceQuantik $piece) : void
-    {
-        if($this->isValidePose($rowNum,$colNum,$piece) == true){
-            $this->plateau->setPiece($rowNum,$colNum,$piece);
+        
+        /**
+         * méthode getPiece
+         * @access public
+         * @return $this->plateauQuantik
+         */
+        public function getPlateau(): PlateauQuantik { return $this->plateauQuantik; }
+       
+       /**
+         * méthode isRowWin
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @return vrai si la ligne contient 4 pièces de formes différentes, faux sinon.
+         */
+        public function isRowWin(int $rowNum): bool {
+            return self::isComboWin($this->plateauQuantik->getRow($rowNum)); 
         }
-    }
-
-    // La fonction __toString() qui est redefini permet d'avoir un affichage plus parlant.
-    // Ainsi comme la classe a une seul attribut qui est un PlateauQuantik,
-    // il faut retourner ce plateau et la methode __toString redefini dans la classe Plateau va se charger de l'affichage.
-    public function __toString() : string
-    {
-        return $this->plateau;
-    }
-
-    // La fonction static isComboValide prend en parametre un ArrayPieceQuantik et verifie si cette array est gagnant ou pas.
-    // Elle renvoie true or false
-    // Elle renvoie false s'il y a une case vide
-    // Vu que chaque forme a un numero,
-    // si tous les cases sont pleines alors le combo sera valide lorsque la somme des valeurs des formes des 4 cases donnent 10.
-    private static function isComboValide(ArrayPieceQuantik $pieces) : bool
-    {
-        $comp = 0;
-        for($i = 0; $i < 4; $i++){
-            if($pieces->getPiecesQuantiks($i)->getForme() == PieceQuantik::VOID) {
-                return false;
+        
+        /**
+         * méthode isColWin
+         * @access public
+         * @param $colNum entier représentant une colonne du plateau
+         * @return vrai si la colonne contient 4 pièces de formes différentes, faux sinon.
+         */
+        public function isColWin(int $colNum): bool { 
+            return self::isComboWin($this->plateauQuantik->getCol($colNum)); 
+        }
+        
+        /**
+         * méthode isRowWin
+         * @access public
+         * @param $dir entier représentant la direction du tableau (NW, NE, SW, SE)
+         * @return vrai si le coin contient 4 pièces de formes différentes, faux sinon.
+         */
+        public function isCornerWin(int $dir): bool {
+            return self::isComboWin($this->plateauQuantik->getCorner($dir)); 
+        }
+        
+        /**
+         * méthode isValidePose
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @param $colNum entier représentant une colonne du plateau
+         * @param $piece PieceQuantik à poser à la ligne et colonne donnée du plateau.
+         * @return vrai si la pièce se place dans sur une case dont la ligne/colonne/coin ne contient pas une pièce adverse de même forme, faux sinon.
+         */
+        public function isValidePose(int $rowNum, int $colNum, PieceQuantik $piece): bool 
+        {
+            if ( $piece->getForme() == PieceQuantik::VOID ) return false;
+            $piecePlateau = $this->plateauQuantik->getPiece($rowNum, $colNum);
+            if ( $piecePlateau->getForme() != PieceQuantik::VOID ) return false;
+                
+            $dir = $this->plateauQuantik->getCornerFromCoord($rowNum, $colNum);
+               
+            return self::isPieceValide($this->plateauQuantik->getRow($rowNum), $piece) &&
+                   self::isPieceValide($this->plateauQuantik->getCol($colNum), $piece) &&
+                   self::isPieceValide($this->plateauQuantik->getCorner($dir), $piece);
+                       
+        }
+        
+        /**
+         * méthode posePiece
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @param $colNum entier représentant une colonne du plateau
+         * @param $piece PieceQuantik à poser à la ligne et colonne donnée du plateau.
+         */
+        public function posePiece(int $rowNum, int $colNum, PieceQuantik $piece) 
+        {
+            if ( $this->isValidePose($rowNum, $colNum, $piece) )
+                $this->plateauQuantik->setPiece($rowNum, $colNum, $piece);
+        }
+        
+        /**
+         * méthode __toString
+         * @access public
+         * @return le tableau sous forme textuel
+         */
+        public function __toString(): string 
+        {
+            return strval($this->plateauQuantik); 
+        }
+        
+        /**
+         * @static
+         * Factorise le code de isRowWin, isColWin, isCornerWin
+         * @access private
+         * @return vrai si la ligne/colonne/coin contient 4 pièces de formes différentes, faux sinon.
+         */
+        private static function isComboWin(array $pieces): bool 
+        {
+            $pPassees = array();
+            $color = $pieces[0]->getCouleur();
+            $array = [PieceQuantik::CUBE => 0, PieceQuantik::CONE => 0, PieceQuantik::SPHERE => 0, PieceQuantik::CYLINDRE => 0];
+            foreach( $pieces as $p ) {
+                $forme = $p->getForme();
+                if ( $forme == PieceQuantik::VOID ) return false;
+                if ( $array[$forme] > 0 ) return false;
+                $array[$forme]++;
             }
-            $comp += $pieces->getPiecesQuantiks($i)->getForme();
-        }
-        if($comp == 10)
             return true;
-        else
-            return false;
-    }
-
-    // La fonction isPieceValide prend en parametre  un ArrayPieceQuantik.
-    // Elle verifie si la forme est posable sur ce ArrayPieces ou pas.
-    // returne true si c'est posable et false sinon.
-    private static function isPieceValide(ArrayPieceQuantik $pieces, PlateauQuantik $p) : bool
-    {
-        for($i = 0; $i < $pieces->getTaille() ; $i++){
-            if($pieces->getPieceQuantik($i)->getForme() == $p->getForme() ) {
-                return false;
-            }
         }
-        return true;
+        
+        /**
+         * @static
+         * @access private
+         * @return vrai si la ligne/colonne/coin ne contient pas une pièce adverse de la même forme que la pièce donnée en paramètre.
+         */
+        private static function isPieceValide(array $pieces, PieceQuantik $piece): bool 
+        {
+            foreach( $pieces as $p2 ) {
+                if ( $p2->getForme() == $piece->getForme() && 
+                     $p2->getCouleur() != $piece->getCouleur() ) return false;
+            }
+            return true;
+        }
     }
-}
-
 ?>

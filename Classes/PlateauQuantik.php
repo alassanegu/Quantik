@@ -1,127 +1,215 @@
-<?php
+<?php 
 
-require "ArrayPieceQuantik.php";
-
-// Cette classe gère un plateau de jeu.
-class PlateauQuantik
-{
-    public const NW = 0;
-    public const NE = 1;
-    public const SW = 2;
-    public const SE = 3;
-
-    public  const NBROWS = 4;
-    public const NBCOLS = 4;
-
-    protected $cases;
-
-    // Le constructeur sans parametre initialise la variable cases qui est une matrice de piece quantik avec des pieces quantik vide
-    public function __construct()
-    {
-        $this->cases = array();
-        for($i = 0; $i < self::NBROWS; $i++){
-            for($j = 0; $j < self::NBCOLS; $j++){
-                $this->setPiece($i, $j, PieceQuantik::initVoid());
+    namespace quantik\metier;
+    
+    require_once("../Classes/PieceQuantik.php");
+    
+    use quantik\metier\PieceQuantik;
+    use Exception;
+    
+    /**
+      * Classe PlateauQuantik
+      *
+      *
+     */
+    class PlateauQuantik {
+    
+        /**
+         * self::NB_ROWS nombre de ligne du plateau
+         * @access public
+         * @const int
+         */
+        public const NB_ROWS = 4;
+        /**
+         * self::NB_COLS nombre de colonnes du plateau
+         * @access public
+         * @const int
+         */
+        public const NB_COLS = 4;
+        /**
+         * self::NW valeur numérique du coin nord-ouest
+         * @access public
+         * @const int
+         */
+        public const NW = 0;
+        /**
+         * self::NE valeur numérique du coin nord-est
+         * @access public
+         * @const int
+         */
+        public const NE = 1;
+        /**
+         * self::SW valeur numérique du coin sud-ouest
+         * @access public
+         * @const int
+         */
+        public const SW = 2;
+        /**
+         * self::SE valeur numérique du coin sud-est
+         * @access public
+         * @const int
+         */
+        public const SE = 3;
+        
+        /**
+          * $cases : tableau multidimensionnel de PieceQuantik ∈ [0;3][0;3] référant le plateau.
+          * @access protected
+          * @var PieceQuantik[][]
+          */ 
+        protected $cases;
+        
+        /**
+         * Constructeur, initialise $this->cases avec des pièces de type VOID.
+         * @access public
+         */
+        public function __construct() 
+        {
+            $this->cases = array(array());
+            for ( $i = 0; $i < self::NB_ROWS; $i++ ) 
+                for ( $y = 0; $y < self::NB_COLS; $y++ )
+                    $this->cases[$i][$y] = PieceQuantik::initVoid();
+        }
+       
+        /**
+         * méthode getPiece
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @param $colNum entier représentant une colonne du plateau
+         * @return PieceQuantik contenu dans $this->cases[$rowNum][$colNum].
+         */
+        public function getPiece(int $rowNum, int $colNum): PieceQuantik 
+        {
+            self::checkBounds($rowNum, $colNum);
+            return $this->cases[$rowNum][$colNum];
+        }
+        
+        /**
+         * méthode setPiece
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @param $colNum entier représentant une colonne du plateau
+         * @param $p PieceQuantik à placer à la position donnée par $rowNum et $colNum
+         */
+        public function setPiece(int $rowNum, int $colNum, PieceQuantik $p) 
+        {
+            self::checkBounds($rowNum, $colNum);
+            $this->cases[$rowNum][$colNum] = $p;
+        }
+        
+        /**
+         * méthode getRow
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @return les PieceQuantik de la ligne $rowNum.
+         */
+        public function getRow(int $rowNum): array
+        {
+            self::checkBounds($rowNum, 0);
+            return $this->cases[$rowNum];
+        }
+        
+        /**
+         * méthode getCol
+         * @access public
+         * @param $colNum entier représentant une colonne du plateau
+         * @return les PieceQuantik de la colonne $colNum.
+         */
+        public function getCol(int $colNum): array
+        {
+             self::checkBounds(0, $colNum);
+             $col = array();
+             for($i = 0; $i < self::NB_COLS; $i++)
+                $col[$i] = $this->cases[$i][$colNum];
+             return $col;
+        }
+        
+        /**
+         * méthode getCorner
+         * @access public
+         * @param $dir entier ∈ [0;3] représentant un coin du tableau (NW, NE, SW, SE).
+         * @return les PieceQuantik du coin demandé en paramètre.
+         */
+        public function getCorner(int $dir): array 
+        {
+            self::checkDir($dir);
+            switch($dir) 
+            {
+                case self::NW:
+                    return [ $this->cases[0][0], $this->cases[0][1], $this->cases[1][0], $this->cases[1][1] ]; 
+                    
+                case self::NE: 
+                    return [ $this->cases[0][2], $this->cases[0][3], $this->cases[1][2], $this->cases[1][3] ];
+                    
+                case self::SW:
+                    return [ $this->cases[2][0], $this->cases[2][1], $this->cases[3][0], $this->cases[3][1] ];
+                    
+                case self::SE: 
+                    return [ $this->cases[2][2], $this->cases[2][3], $this->cases[3][2], $this->cases[3][3] ];
             }
+
         }
-    }
-
-    // Le getteur getPiece prend en parametre un numero de ligne et un numero de colonne puis retounre la valeur du PieceQuantik a cette position.
-    public function getPiece(int $rowNum, int $colNum) : PieceQuantik
-    {
-        return $this->cases[$rowNum][$colNum];
-    }
-
-    // Le setteur setPiece prend en parametre un numero de ligne, un numero de colonne et ume piece quantik puis affecte la piece a la position dans cases.
-    public function setPiece(int $rowNum, int $colNum, PieceQuantik $p) : void
-    {
-        $this->cases[$rowNum][$colNum] = $p;
-    }
-
-    // Le getteur getRow prend en parametre un numero de ligne et retounre un ArrayPieceQuantik correspondant a ce ligne dans cases.
-    public function getRow(int $numRow) : ArrayPieceQuantik
-    {
-        $a = new ArrayPieceQuantik();
-        for($i = 0; $i < self::NBCOLS; $i++) {
-            $a->setPiecesQuantiks($i, $this->cases[$numRow][$i]);
-        }
-        return $a;
-    }
-
-    // Le getteur getCol prend en parametre un numero de colonne et retounre un ArrayPieceQuantik correspondant a ce colonne dans cases.
-    public function getCol(int $numCol) : ArrayPieceQuantik
-    {
-        $a = new ArrayPieceQuantik();
-        for($i = 0; $i < self::NBROWS; $i++) {
-            $a->setPiecesQuantiks($i, $this->cases[$i][$numCol]);
-        }
-        return $a;
-    }
-
-    // Le getteur getCorner prend en parametre un numero et verifie dabord de quelle corner s'agit il puis retounre un ArrayPieceQuantik correspondant a ce corner dans cases.
-    public function getCorner(int $dir) : ArrayPieceQuantik
-    {
-        $a = new ArrayPieceQuantik();
-        if($dir == self::NW){
-            $a->setPiecesQuantiks(0, $this->cases[0][0]);
-            $a->setPiecesQuantiks(1, $this->cases[0][1]);
-            $a->setPiecesQuantiks(2, $this->cases[1][0]);
-            $a->setPiecesQuantiks(3, $this->cases[1][1]);
-        } else if($dir == self::NE){
-            $a->setPiecesQuantiks(0, $this->cases[0][2]);
-            $a->setPiecesQuantiks(1, $this->cases[0][3]);
-            $a->setPiecesQuantiks(2, $this->cases[1][2]);
-            $a->setPiecesQuantiks(3, $this->cases[1][3]);
-        }else if($dir == self::SW){
-            $a->setPiecesQuantiks(0, $this->cases[2][0]);
-            $a->setPiecesQuantiks(1, $this->cases[2][1]);
-            $a->setPiecesQuantiks(2, $this->cases[3][0]);
-            $a->setPiecesQuantiks(3, $this->cases[3][1]);
-        }else if($dir == self::SE){
-            $a->setPiecesQuantiks(0, $this->cases[2][2]);
-            $a->setPiecesQuantiks(1, $this->cases[2][3]);
-            $a->setPiecesQuantiks(2, $this->cases[3][2]);
-            $a->setPiecesQuantiks(3, $this->cases[3][3]);
-        }
-        return $a;
-    }
-
-    // La fonction __toString() qui est redefini permet d'avoir un affichage plus parlant.
-    // Ainsi elle va parcourir les pieces quantik qui sont dans l'attribut cases et va stocker dans une chaine des valeurs permettant l'affichage.
-    // Apres elle retourne la chaine contenant la valeur a affiche.
-    public function __toString() : string
-    {
-        $s = "";
-        $i = 0;
-        $j = 0;
-        foreach($this->cases as $lignes){
-            $s = $s."Ligne [".$i."]</br>";
-            foreach ($lignes as $val) {
-                $s = $s."Colonne [".$j."] = ".$val."</br>";
-                $j++;
+        
+        /**
+         * méthode __toString()
+         * @access public
+         * @return une représentation textuel du plateau dans l'état.
+         */
+        public function __toString(): string 
+        {
+            $res = "";
+            for ( $i = 0; $i < self::NB_ROWS; $i++ )
+                $res .= "|-----------------|";
+                
+            $res .= "\n";
+            
+            for ( $i = 0; $i < self::NB_ROWS; $i++ ) {
+                for ( $y = 0; $y < self::NB_COLS; $y++ ) {
+                    $piece = $this->cases[$i][$y];
+                    $res .= "|" . sprintf(" %-16s",$piece) . "|";
+                }
+                $res .= "\n";
             }
-            $j = 0;
-            $i++;
+            
+            for ( $i = 0; $i < self::NB_ROWS; $i++ )
+                $res .= "|-----------------|";
+                
+            return $res;
         }
-        return $s;
-    }
-
-    // Le getteur getCornerFromCoord prend en parametre un numero de ligne et un numero de colonne puis retounre le coorner correspondant.
-    public static function getCornerFromCoord(int $rowNum, int $colNum) : int{
-        $retour = 0;
-        if($rowNum == 0 || $rowNum == 1){
-            if($colNum == 0 || $colNum == 1)
-                $retour = PlateauQuantik::NW;
-            else
-                $retour = PlateauQuantik::NE;
-        }else{
-            if($colNum == 0 || $colNum == 1)
-                $retour = PlateauQuantik::SW;
-            else
-                $retour = PlateauQuantik::SE;
+        
+        /**
+         * @static
+         * Donne une direction par rapport à la case du tableau donné.
+         * @access public
+         * @param $rowNum entier représentant une ligne du plateau
+         * @param $colNum entier représentant une colonne du plateau
+         * @return un entier ∈ [0;3] représentant une direction (NW, NE, SW, SE).
+         */
+        public static function getCornerFromCoord(int $rowNum, int $colNum): int {
+            self::checkBounds($rowNum, $colNum);
+            
+            if ( $rowNum <  self::NB_ROWS/2 && $colNum <  self::NB_COLS/2 ) return self::NW;
+            if ( $rowNum <  self::NB_ROWS/2 && $colNum >= self::NB_COLS/2 ) return self::NE;
+            if ( $rowNum >= self::NB_ROWS/2 && $colNum <  self::NB_COLS/2 ) return self::SW;
+            if ( $rowNum >= self::NB_ROWS/2 && $colNum >= self::NB_COLS/2 ) return self::SE;
         }
-        return $retour;
+        
+        /**
+         * @static
+         * Vérifie que la ligne et la colonne donné pointe bien vers une case du plateau.
+         * @access public
+         */
+        private static function checkBounds(int $rowNum, int $colNum): void {
+            if ( $rowNum < 0 || $rowNum >= self::NB_ROWS ||
+                 $colNum < 0 || $colNum >= self::NB_COLS   ) throw new \Exception("Coordonnées hors du plateau\n");
+        }
+        
+        /**
+         * @static
+         * Vérifie que la direction donné fait bien partie de nos 4 valeurs possibles (NW, NE, SW, SE).
+         * @access public
+         */
+        private static function checkDir(int $dir) {
+            if ( $dir < 0 && $dir > self::SE ) throw new \Exception("Direction non valide\n");
+        }
     }
-}
-
 ?>

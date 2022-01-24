@@ -1,95 +1,190 @@
-<?php
+<?php 
 
-// Cette classe gère une pièce du jeu
-class PieceQuantik {
-    public const WHITE = 0;
-    public const BLACK = 1;
-    public const VOID = 0;
-    public const CUBE = 1;
-    public const CONE = 2;
-    public const CYLINDRE = 3;
-    public const SPHERE = 4;
-
-    protected $forme;
-    protected $couleur;
-
-    // Le constructeur prend 2 parametres et initialise les attributs forme et couleur
-    private function __construct($forme, $couleur)
-    {
-        $this->forme = $forme;
-        $this->couleur = $couleur;
+    namespace quantik\metier;
+    
+    /**
+     * Classe PieceQuantik
+     *
+     */
+    class PieceQuantik {
+    
+        /**
+         * self::WHITE valeur numérique de la couleur blanche
+         * @access public
+         * @const int
+         */
+        public const WHITE = 0;
+        
+        /**
+         * self::BLACK valeur numérique de la couleur noire
+         * @access public
+         * @const int
+         */
+        public const BLACK = 1;
+        
+        /**
+         * self::VOID valeur numérique d'une pièce vide (case vide)
+         * @access public
+         * @const int
+         */
+        public const VOID = 0;
+        
+        /**
+         * self::CUBE valeur numérique de la forme cube
+         * @access public
+         * @const int
+         */
+        public const CUBE = 1;
+        
+        /**
+         * self::CONE valeur numérique de la forme cone
+         * @access public
+         * @const int
+         */
+        public const CONE = 2;
+        
+        /**
+         * self::CYLINDRE valeur numérique de la forme cylindre
+         * @access public
+         * @const int
+         */
+        public const CYLINDRE = 3;
+        
+        /**
+         * self::SPHERE valeur numérique de la forme sphère
+         * @access public
+         * @const int
+         */
+        public const SPHERE = 4;
+        
+        /**
+         * self::TAB_AFFICHE_PIECE : tableau mutlidimensionnel stockant les affichages textuels de pièces.
+         * @access public
+         * @const array(array())
+         */
+        private const TAB_AFFICHE_PIECE = 
+        [
+            self::VOID     => "    ",
+            self::CUBE     => [self::WHITE => "Cu:W", self::BLACK => "Cu:B"],
+            self::CONE     => [self::WHITE => "Co:W", self::BLACK => "Co:B"],
+            self::CYLINDRE => [self::WHITE => "Cy:W", self::BLACK => "Cy:B"],
+            self::SPHERE   => [self::WHITE => "Sp:W", self::BLACK => "Sp:B"],
+        ];
+        
+        /**
+         * $forme : entier ∈ [0;4] indiquant la forme de la pièce.
+         * @access protected
+         * @var int
+         */ 
+        protected $forme;
+        
+        /**
+         * $couleur : entier ∈ [0;1] indiquant la couleur de la pièce.
+         * @access protected
+         * @var int
+         */ 
+        protected $couleur;
+        
+        
+        /**
+         * Constructeur
+         * @access private
+         * @param $forme la forme à donner à la pièce
+         * @param $couleur la couleur, noire ou blanche, de la pièce.
+         */
+        private function __construct(int $forme, int $couleur) 
+        {
+            $this->forme   = $forme;
+            $this->couleur = $couleur;
+        }
+        
+        /**
+         * méthode getForme
+         * @access public
+         * @return $this->forme
+         */
+        public function getForme(): int { return $this->forme;   }
+        
+        /**
+         * méthode getCouleur
+         * @access public
+         * @return $this->couleur
+         */
+        public function getCouleur(): int { return $this->couleur; }
+        
+        /**
+         * méthode __toString
+         * @access public
+         * @return un affichage textuel de la forme et la couleur de la pièce.
+         */
+        public function __toString(): string 
+        { 
+            $forme = $this->forme;
+            if ( $forme == self::VOID ) return self::TAB_AFFICHE_PIECE[$forme];         
+            return self::TAB_AFFICHE_PIECE[$forme][$this->couleur];
+        }
+        
+        /**
+         * @static
+         * @access public
+         * @return une case vide
+         */
+        public static function initVoid(): self { return new PieceQuantik(self::VOID, self::WHITE); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cube et de couleur blanche
+         */
+        public static function initWhiteCube(): self { return new PieceQuantik(self::CUBE, self::WHITE); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cube et de couleur noire
+         */
+        public static function initBlackCube(): self { return new PieceQuantik(self::CUBE, self::BLACK); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cone et de couleur blanche
+         */
+        public static function initWhiteCone(): self { return new PieceQuantik(self::CONE, self::WHITE); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cone et de couleur noire
+         */
+        public static function initBlackCone(): self { return new PieceQuantik(self::CONE, self::BLACK); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cylindre et de couleur blanche
+         */
+        public static function initWhiteCylindre(): self { return new PieceQuantik(self::CYLINDRE, self::WHITE); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme cylindre et de couleur noire
+         */
+        public static function initBlackCylindre(): self { return new PieceQuantik(self::CYLINDRE, self::BLACK); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme sphere et de couleur blanche
+         */
+        public static function initWhiteSphere(): self { return new PieceQuantik(self::SPHERE, self::WHITE); }
+        
+        /**
+         * @static
+         * @access public
+         * @return une pièce de forme sphere et de couleur noire
+         */
+        public static function initBlackSphere(): self { return new PieceQuantik(self::SPHERE, self::BLACK); }
     }
-
-    // Le getteur getForme() retounre la valeur de forme
-    public function getForme()
-    {
-        return $this->forme;
-    }
-
-    // Le getteur getCouleur() retounre la valeur de couleur
-    public function getCouleur(){
-        return $this->couleur;
-    }
-
-    // La fonction __toString() qui est redefini permet d'avoir un affichage plus parlant. Ainsi elle retourne une chaine contenant la valeur a affiche
-    public function __toString() : string
-    {
-        $s = "la forme est : ".$this->getForme()." et la couleur est : ".$this->getCouleur()."</br>";
-        return $s;
-    }
-
-    // La fonction initVoid() cree et renvoiee une piece quantik avec des valeurs vide
-    public static function initVoid() : PieceQuantik
-    {
-        return new PieceQuantik(self::VOID,self::VOID);
-    }
-
-    // La fonction initWhiteCube() cree et renvoie une piece quantik avec la forme d'un cube et la couleur blanche
-    public static function initWhiteCube() : PieceQuantik
-    {
-        return new PieceQuantik(self::CUBE,self::WHITE);
-    }
-
-    // La fonction initBlackCube() cree et renvoie une piece quantik avec la forme d'un cube et la couleur noire
-    public static function initBlackCube() : PieceQuantik
-    {
-        return new PieceQuantik(self::CUBE,self::BLACK);
-    }
-
-    // La fonction initWhiteCone() cree et renvoie une piece quantik avec la forme d'un cone et la couleur blanche
-    public static function initWhiteCone() : PieceQuantik
-    {
-        return new PieceQuantik(self::CONE,self::WHITE);
-    }
-
-    // La fonction initBlackCone() cree et renvoie une piece quantik avec la forme d'un cube et la couleur noire
-    public static function initBlackCone():PieceQuantik{
-        return new PieceQuantik(self::CONE,self::BLACK);
-    }
-
-    // La fonction initWhiteCylindre() cree et renvoie une piece quantik avec la forme d'un cylindre et la couleur blanche
-    public static function initWhiteCylindre() : PieceQuantik
-    {
-        return new PieceQuantik(self::CYLINDRE,self::WHITE);
-    }
-
-    // La fonction initBlackCylindre() cree et renvoie une piece quantik avec la forme d'un cylindre et la couleur noire
-    public static function initBlackCylindre() : PieceQuantik
-    {
-        return new PieceQuantik(self::CYLINDRE,self::BLACK);
-    }
-
-    // La fonction initWhiteSphere() cree et renvoie une piece quantik avec la forme d'un sphere et la couleur blanche
-    public static function initWhiteSphere() : PieceQuantik
-    {
-        return new PieceQuantik(self::SPHERE,self::WHITE);
-    }
-
-    // La fonction initBlackSphere() cree et renvoie une piece quantik avec la forme d'un sphere et la couleur noire
-    public static function initBlackSphere() : PieceQuantik
-    {
-        return new PieceQuantik(self::SPHERE,self::BLACK);
-    }
-}
-
 ?>

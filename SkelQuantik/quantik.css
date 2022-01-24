@@ -1,0 +1,105 @@
+:root {
+    --bg-title: #F2F0EB;
+    --btn-active: #000077;
+    --btn-disabled: #EEE;
+    --btn: #33AA33;
+    --btn-undo: #FF3333;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+.quantik-title {
+    text-align: center;
+    background: #F2F0EB;
+    margin: 0;
+    padding: 1rem;
+}
+
+.quantik { margin-top: 2rem; }
+
+.quantik div  {
+    text-align: center;
+    border-top: 1px solid #000;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #000;
+}
+
+.quantik table {
+    margin: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.quantik-btn {
+    margin: 2px;
+    background: var(--btn);
+    border-radius: 2rem;
+    border: 1px solid #666;
+    padding: 1.5rem 5rem;
+    box-shadow: inset 0px -10px 3px #009900;
+}
+
+.quantik-btn:active {
+    transition: box-shadow .3s;
+    box-shadow: unset !important;
+}
+
+.quantik-btn:disabled {
+    background: var(--btn-disabled);
+    border-radius: 2rem;
+    box-shadow: unset !important;
+}
+
+.quantik-btn-selected {
+    background: var(--btn-active) !important;
+    position: relative;
+}
+
+.quantik-btn-selected:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    content: '';
+    border: 3px solid var(--btn-active);
+    border-radius: 2rem;
+    animation: btn-selected;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    transition: opacity 1s;
+    opacity: 1;
+}
+
+.quantik-btn-undo {
+    background: var(--btn-undo) !important;
+    border: 1px solid #FF0000 !important;
+    box-shadow: inset 0px -10px 3px #990000 !important;
+}
+
+.quantik-reset {
+    text-align: center;
+}
+
+.quantik-end-msg {
+    text-align: center;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+
+@keyframes btn-selected {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  to {
+   transform: scaleX(1.1) scaleY(1.3);
+   opacity: 0;
+  }
+}

@@ -4,13 +4,21 @@
  * @date janvier 2021
  */
 
-require_once("PieceQuantik.php");
-require_once("PlateauQuantik.php");
-require_once("ActionQuantik.php");
-require_once("QuantikException.php");
-require_once("QuantikUIGenerator.php");
+require_once("../Classes/PieceQuantik.php");
+require_once("../Classes/PlateauQuantik.php");
+require_once("../Classes/ActionQuantik.php");
+require_once("../SkelQuantik/QuantikException.php");
+require_once("../SkelQuantik/QuantikUIGenerator.php");
+
+ use quantik\metier\PieceQuantik;
+ use quantik\metier\PlateauQuantik;
+ use quantik\metier\ActionQuantik;
+ use quantik\metier\ArrayPieceQuantik;
+ use quantik\QuantikException;
 
 session_start();
+
+
 
 if (isset($_GET['reset'])) { //pratique pour réinitialiser une partie à la main
     unset($_SESSION['etat']);
@@ -30,6 +38,7 @@ if (empty($_SESSION)) { // initialisation des variables de session
     $_SESSION['message'] = "";
 }
 
+
 $pageHTML = "";
 
 $aq = new ActionQuantik($_SESSION['plateau']);
@@ -39,13 +48,32 @@ $aq = new ActionQuantik($_SESSION['plateau']);
         if (isset($_GET['action'])) {
             switch ($_GET['action']) {
                 case 'choisirPiece':
-                    /* TODO */
+                    $_SESSION['etat'] = 'posePiece';
                     break;
                 case 'poserPiece':
-                    /* TODO : action pouvant conduire à 2 états selon le résultat : posePiece ou victoire */
+                    $positionPiece = $_GET['positionPiece'];
+                    $arrayPieceQuantik = ($_SESSION['couleurActive'] == PieceQuantik::WHITE)?$_SESSION['lesBlancs']:$_SESSION['lesNoirs'];
+                    list($row, $col) = explode("-", $_GET["active"]);
+                    if ( !(ctype_digit($row)) ||  !(ctype_digit($col)) ) throw new QuantikException("Coordonnées invalides");
+                    try {
+                        $piece = $arrayPieceQuantik->getPieceQuantik($positionPiece);
+                        if ( $aq->isValidePose($row, $col, $piece) ) { 
+                            $aq->posePiece($row, $col, $piece);
+                            $arrayPieceQuantik->removePieceQuantik($positionPiece);
+                             if ( checkWin($aq) ) {
+                                $_SESSION['etat'] = 'victoire';
+                            } else {
+                                $_SESSION['couleurActive'] = ($_SESSION['couleurActive'] == PieceQuantik::WHITE)?PieceQuantik::BLACK:PieceQuantik::WHITE;
+                                $_SESSION['etat'] = 'choixPiece';
+                            }
+                            
+                        }
+                    }catch(\Exception $e) {
+                        throw new QuantikException($e->getMessage());
+                    }
                     break;
                 case 'annulerChoix':
-                    /* TODO */
+                    $_SESSION['etat'] = 'choixPiece';
                     break;
                 default:
                     throw new QuantikException("Action non valide");
@@ -56,15 +84,16 @@ $aq = new ActionQuantik($_SESSION['plateau']);
             $_SESSION['message'] = $exception->__toString();
         }
 
+$lesPieces = array($_SESSION['lesBlancs'], $_SESSION['lesNoirs']);
 switch($_SESSION['etat']) {
     case 'choixPiece':
-        /* TODO */
+        $pageHTML = QuantikUIGenerator::getPageSelectionPiece($lesPieces, $_SESSION['couleurActive'], $_SESSION['plateau']);
         break;
     case 'posePiece':
-        /* TODO */
+        $pageHTML = QuantikUIGenerator::getPagePosePiece($lesPieces, $_SESSION['couleurActive'], $_GET['active'], $_SESSION['plateau']);
         break;
     case 'victoire':
-        /* TODO */
+        $pageHTML = QuantikUIGenerator::getPageVictoire($lesPieces, $_SESSION['couleurActive'], $_SESSION['plateau']);
         break;
     default: // sans doute etape=bug
         echo QuantikUIGenerator::getPageErreur($_SESSION['message']);
@@ -72,3 +101,18 @@ switch($_SESSION['etat']) {
 }
 // seul echo nécessaire toute la pageHTML a été générée dans la variable $pageHTML
 echo $pageHTML;
+
+
+function checkWin($action) {
+    for ( $i = 0; $i < PlateauQuantik::NB_ROWS; $i++ ) {
+        //Le plateau est carré nous pouvons donc vérifier colonne et ligne en même temps.
+        if ( $action->isRowWin($i) || $action->isColWin($i) ) {
+            return true;
+        }
+    }
+    return ( $action->isCornerWin(PlateauQuantik::NW) ||
+             $action->isCornerWin(PlateauQuantik::NE) ||
+             $action->isCornerWin(PlateauQuantik::SW) ||
+             $action->isCornerWin(PlateauQuantik::SE) 
+           );
+}

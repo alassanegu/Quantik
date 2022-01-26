@@ -65,10 +65,10 @@
         private const TAB_AFFICHE_PIECE = 
         [
             self::VOID     => "    ",
-            self::CUBE     => [self::WHITE => "Cu:W", self::BLACK => "Cu:B"],
-            self::CONE     => [self::WHITE => "Co:W", self::BLACK => "Co:B"],
-            self::CYLINDRE => [self::WHITE => "Cy:W", self::BLACK => "Cy:B"],
-            self::SPHERE   => [self::WHITE => "Sp:W", self::BLACK => "Sp:B"],
+            self::CUBE     => [self::WHITE => "<img style='width: 50px' src='../icone/cube-blanc.png'>", self::BLACK => "<img style='width: 50px' src='../icone/cube-noire.png'>"],
+            self::CONE     => [self::WHITE => "<img style='width: 50px' src='../icone/cone-blanc.png'>", self::BLACK => "<img style='width: 50px' src='../icone/cone-noire.png'>"],
+            self::CYLINDRE => [self::WHITE => "<img style='width: 50px' src='../icone/cylindre-blanc.png'>", self::BLACK => "<img style='width: 50px' src='../icone/cylindre-noire.png'>"],
+            self::SPHERE   => [self::WHITE => "<img style='width: 50px' src='../icone/sphere-blanc.png'>", self::BLACK => "<img style='width: 50px' src='../icone/sphere-noire.png'>"],
         ];
         
         /**

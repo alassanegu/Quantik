@@ -94,7 +94,7 @@ class QuantikUIGenerator
             for ($y = 0; $y < PlateauQuantik::NB_COLS; $y++ ) {
                 $resultat .= "
                             <td>
-                                <button class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>(".$p->getPiece($i, $y).")</button>
+                                <button class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>".$p->getPiece($i, $y)."</button>
                             </td>\n";
             }
             $resultat .= "</tr>\n";
@@ -161,9 +161,9 @@ class QuantikUIGenerator
             $resultat .= "<tr>";
             for ($y = 0; $y < PlateauQuantik::NB_COLS; $y++ ) {
                 if ( $action->isValidePose($i, $y, $piece) )
-                    $resultat .= "<td><button class=\"quantik-btn\" type=\"submit\" name=\"active\" value=\"$i-$y\">(".$plateau->getPiece($i, $y).")</button></td>";
+                    $resultat .= "<td><button class=\"quantik-btn\" type=\"submit\" name=\"active\" value=\"$i-$y\">".$plateau->getPiece($i, $y)."</button></td>";
                 else
-                    $resultat .= "<td><button style=\"color : red;\" class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>(".$plateau->getPiece($i, $y).")</button></td>";
+                    $resultat .= "<td><button style=\"color : red;\" class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>".$plateau->getPiece($i, $y)."</button></td>";
             }
             $resultat .= "</tr>";
         }

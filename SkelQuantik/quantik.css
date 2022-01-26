@@ -9,13 +9,33 @@
 html, body {
     padding: 0;
     margin: auto;
-    width: 85%;
-    background-color: aqua;
+    width: 100%;
+    background-color: grey;
+}
+
+
+.titre {
+	width: 20%;
+	margin-right: auto;
+	margin-left: auto;
+    background: white;
+    margin-top: 10px;
+}
+
+.grandTable {
+/*	table-layout: fixed;
+*/	width: 1110px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.grandTd{
+	height: 80%;
+	width: 50%;
 }
 
 .quantik-title {
     text-align: center;
-    background: #F2F0EB;
     margin: 0;
     padding: 1rem;
 }
@@ -43,7 +63,7 @@ html, body {
     background: var(--btn);
     border-radius: 2rem;
     border: 1px solid #666;
-    padding: 1.5rem 5rem;
+    padding: 1rem 3rem;
     box-shadow: inset 0px -10px 3px #32a932;
 }
 
@@ -113,6 +133,7 @@ html, body {
     margin: 5px;
     border-radius: 10px;
     box-shadow: 1px 1px 1px  1px;
+    width: 550px;
 }
 .quantikSelect{
     border: 1px solid;
@@ -125,11 +146,28 @@ html, body {
     margin: 5px;
     border-radius: 10px;
     box-shadow: 1px 1px 1px  1px;
+    height: 310px;
 }
 .quantikDivPlateau{
     border: 1px solid;
     margin: 5px;
     border-radius: 10px;
     box-shadow: 1px 1px 1px  1px;
+    height: 360px;
 }
 
+h2{
+	text-align: center;
+}
+
+.borureArrondi {
+  border: 2px solid black;
+  padding: 10px;
+  border-radius: 25px;
+
+}
+
+/*.form1 {
+    background: url('http://imgur.com/I0EwG.png') transparent;
+    border: none;
+}*/

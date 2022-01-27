@@ -45,9 +45,6 @@ class QuantikUIGenerator
     public static function getFinHTML(): string
     {
         return "
-                    </td>
-                </tr>
-            </table>
         </div>
         <div style='margin-top: 5em; padding: 5em;'>
             <footer style=\"text-align: center;\">@Alassane-GUEYE & Khadim-FAll</footer>
@@ -98,9 +95,8 @@ class QuantikUIGenerator
                                 <button class=\"quantik-btn-1\" type=\"submit\" name=\"active\" disabled>".$p->getPiece($i, $y)."</button>
                             ";
             }
-           // $resultat .= "</tr>\n";
         }
-        //$resultat .= "</table>\n";
+        $resultat .= "</td></tr></table>";
         return $resultat;
     }
 
@@ -167,14 +163,13 @@ class QuantikUIGenerator
                 else
                     $resultat .= "<button style=\"background-color:#FF2E2ED2\" class=\"quantik-btn-1\" type=\"submit\" name=\"active\" disabled>".$plateau->getPiece($i, $y)."</button>";
             }
-            //$resultat .= "</tr>";
         }
         unset($action);
-        //$resultat .= "</table>";
         $resultat .= "</div>\n";
         $resultat .= "<input type=\"hidden\" name=\"action\" value=\"poserPiece\" />";
         $resultat .= "<input type=\"hidden\" name=\"positionPiece\" value=\"$position\" />";
         $resultat .="</form>";
+        $resultat .= "</td></tr></table>";
         $resultat .= self::getFormBoutonAnnuler();
         return $resultat;
     }
@@ -270,12 +265,15 @@ class QuantikUIGenerator
     public static function getPageVictoire(array $lesPiecesDispos, int $couleurActive, PlateauQuantik $plateau): string {
         $pageHTML = self::getDebutHTML();
 
+        $pageHTML .= "<div class ='victoire'>";
         $pageHTML .= self::getDivMessageVictoire($couleurActive);
         $pageHTML .= self::getLienRecommencer();
+        $pageHTML .= "</div>";
 
         $piecesActives = $lesPiecesDispos[$couleurActive];
         unset($lesPiecesDispos[$couleurActive]);
         $pieceNonActive = array_shift($lesPiecesDispos);
+        
         if ($couleurActive == PieceQuantik::WHITE){
             $pageHTML .= self::getDivPiecesDisponibles($piecesActives);
             $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);

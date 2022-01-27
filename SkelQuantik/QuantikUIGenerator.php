@@ -32,9 +32,7 @@ class QuantikUIGenerator
             <h1 class=\"quantik-title\">$title</h1>
         </div
         <div class='quantik'>
-            <table class='grandTable'>
-                <tr>
-                    <td class='grandTd'>
+            
 
         \n";
     }
@@ -108,10 +106,13 @@ class QuantikUIGenerator
     public static function getDivPiecesDisponibles(ArrayPieceQuantik $apq, int $pos = -1): string {
         $resultat = "";
         if(($apq->getPieceQuantik(0))->getCouleur() == 0){
-            $resultat = "<div class='quantikDispo'><h2>Blanc</h2>\n";
+            $resultat = "<table class='grandTable'>
+                <tr>
+                    <td class='grandTd'>";
+            $resultat .= "<div class='quantikDispo'><h2>Blanc</h2>\n";
         }
         else{
-            $resultat = "<div class='quantikDispo'><h2>Noir</h2>\n";
+            $resultat .= "<div class='quantikDispo'><h2>Noir</h2>\n";
         }
         for($i = 0; $i < $apq->getTaille(); $i++) {
             $class = "quantik-btn";
@@ -129,10 +130,15 @@ class QuantikUIGenerator
      * @return string
      */
     public static function getFormSelectionPiece(ArrayPieceQuantik $apq): string {
-        if($apq->getPieceQuantik(0)->getCouleur() == 0)
-            $resultat = "<div class=\"quantikSelect\"><h2>Blanc</h2>\n";
+        $resultat = "";
+        if($apq->getPieceQuantik(0)->getCouleur() == 0){
+            $resultat = "<table class='grandTable'>
+                <tr>
+                    <td class='grandTd'>";
+            $resultat .= "<div class=\"quantikSelect\"><h2>Blanc</h2>\n";
+        }
         else
-            $resultat = "<div class=\"quantikSelect\"><h2>Noir</h2>\n";
+            $resultat .= "<div class=\"quantikSelect\"><h2>Noir</h2>\n";
         $resultat .= "<form>";
         for($i = 0; $i < $apq->getTaille(); $i++)
             $resultat .= "<button class=\"quantik-btn far fa-star form".$apq->getPieceQuantik($i)->getForme()."\" type=\"submit\" value=\"$i\" name=\"active\">". $apq->getPieceQuantik($i) ."</button>";
@@ -187,7 +193,7 @@ class QuantikUIGenerator
      */
     public static function getDivMessageVictoire(int $couleur): string {
         $couleurGagnant = ($couleur == PieceQuantik::WHITE)?'BLANC':'NOIR';
-        $resultat = "<h1 class=\"quantik-end-msg\">FIN DE PARTIE, GAGNANT : " . $couleurGagnant . "</h1>";
+        $resultat = "<div class='quantik-end-msg'><h1 class='h1Quantik-end-msg'>FIN DE PARTIE, GAGNANT : " . $couleurGagnant . "</h1></div>";
         return $resultat;
     }
 

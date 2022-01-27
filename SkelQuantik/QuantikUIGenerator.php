@@ -44,12 +44,14 @@ class QuantikUIGenerator
      */
     public static function getFinHTML(): string
     {
-        return " 
+        return "
                     </td>
                 </tr>
             </table>
         </div>
-        <footer style=\"text-align: center;\">@Alassane-GUEYE & Khadim-FAll</footer>
+        <div style='margin-top: 5em; padding: 5em;'>
+            <footer style=\"text-align: center;\">@Alassane-GUEYE & Khadim-FAll</footer>
+        </div>
     </body>\n
 </html>";
     }
@@ -87,19 +89,18 @@ class QuantikUIGenerator
      */
     public static function getDivPlateauQuantik(PlateauQuantik $p): string
     {
-        $resultat = "</td><td class='grandTd'><div class=\"quantikDivPlateau\"><h2>Plateau</h2>\n";
-        $resultat .= "<table>\n";
+        $resultat = "</td><td class='grandTd'><div class=\"quantikDivPlateau\">";
+        //$resultat .= "<table>\n";
         for ( $i = 0; $i < PlateauQuantik::NB_ROWS; $i++ ) {
-            $resultat .= "<tr>\n";
+            //$resultat .= "<tr>\n";
             for ($y = 0; $y < PlateauQuantik::NB_COLS; $y++ ) {
                 $resultat .= "
-                            <td>
-                                <button class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>".$p->getPiece($i, $y)."</button>
-                            </td>\n";
+                                <button class=\"quantik-btn-1\" type=\"submit\" name=\"active\" disabled>".$p->getPiece($i, $y)."</button>
+                            ";
             }
-            $resultat .= "</tr>\n";
+           // $resultat .= "</tr>\n";
         }
-        $resultat .= "</table>\n";
+        //$resultat .= "</table>\n";
         return $resultat;
     }
 
@@ -154,21 +155,22 @@ class QuantikUIGenerator
     public static function getFormPlateauQuantik(PlateauQuantik $plateau, PieceQuantik $piece, int $position): string {
         $resultat = "";
         $action = new ActionQuantik($plateau);
-        $resultat .= "</td><td class='grandTd'><div class=\"quantik-Plateau\"><h2>Plateau</h2>\n";
-        $resultat .= "<form>";
-        $resultat .= "<table>";
+        $resultat .= "</td><td class='grandTd'><div class=\"quantikDivPlateau\">";
+        $resultat .= "<form class='form'>";
+       // $resultat .= "<table>";
         for ( $i = 0; $i < PlateauQuantik::NB_ROWS; $i++ ) {
-            $resultat .= "<tr>";
+            //$resultat .= "<tr>";
             for ($y = 0; $y < PlateauQuantik::NB_COLS; $y++ ) {
                 if ( $action->isValidePose($i, $y, $piece) )
-                    $resultat .= "<td><button class=\"quantik-btn\" type=\"submit\" name=\"active\" value=\"$i-$y\">".$plateau->getPiece($i, $y)."</button></td>";
+                    $resultat .= "<button style=\"background-color: #32a932\" class=\"quantik-btn-1\" type=\"submit\" name=\"active\" value=\"$i-$y\">".$plateau->getPiece($i, $y)."</button>";
+//                    $resultat .= "<td><button class=\"quantik-btn\" type=\"submit\" name=\"active\" value=\"$i-$y\">".$plateau->getPiece($i, $y)."</button></td>";
                 else
-                    $resultat .= "<td><button style=\"color : red;\" class=\"quantik-btn\" type=\"submit\" name=\"active\" disabled>".$plateau->getPiece($i, $y)."</button></td>";
+                    $resultat .= "<button style=\"background-color:#FF2E2ED2\" class=\"quantik-btn-1\" type=\"submit\" name=\"active\" disabled>".$plateau->getPiece($i, $y)."</button>";
             }
-            $resultat .= "</tr>";
+            //$resultat .= "</tr>";
         }
         unset($action);
-        $resultat .= "</table>";
+        //$resultat .= "</table>";
         $resultat .= "</div>\n";
         $resultat .= "<input type=\"hidden\" name=\"action\" value=\"poserPiece\" />";
         $resultat .= "<input type=\"hidden\" name=\"positionPiece\" value=\"$position\" />";
@@ -188,7 +190,7 @@ class QuantikUIGenerator
      * @param int $couleur
      * @return string
      */
-    public static function getDivMessageVictoire(int $couleur): string {   
+    public static function getDivMessageVictoire(int $couleur): string {
         $couleurGagnant = ($couleur == PieceQuantik::WHITE)?'BLANC':'NOIR';
         $resultat = "<h1 class=\"quantik-end-msg\">FIN DE PARTIE, GAGNANT : " . $couleurGagnant . "</h1>";
         return $resultat;
@@ -209,17 +211,22 @@ class QuantikUIGenerator
      */
     public static function getPageSelectionPiece(array $lesPiecesDispos, int $couleurActive, PlateauQuantik $plateau): string {
         $pageHTML = self::getDebutHTML();
-        
+
+
         $piecesActives = $lesPiecesDispos[$couleurActive];
         unset($lesPiecesDispos[$couleurActive]);
         $pieceNonActive = array_shift($lesPiecesDispos);
-//        $pageHTML .= "<div class ='block-piece'>";
-        $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
-        $pageHTML .= self::getFormSelectionPiece($piecesActives);
-//        $pageHTML .= "</div>";
-//        $pageHTML .= "<div class ='block-plateau'>";
+        if ($couleurActive == PieceQuantik::WHITE){
+            $pageHTML .= self::getFormSelectionPiece($piecesActives);
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+
+        }else{
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+            $pageHTML .= self::getFormSelectionPiece($piecesActives);
+
+        }
         $pageHTML .= self::getDivPlateauQuantik($plateau);
-//        $pageHTML .= "</div>";
+
         return $pageHTML. self::getFinHTML();
     }
 
@@ -236,15 +243,20 @@ class QuantikUIGenerator
         $piecesActives = $lesPiecesDispos[$couleurActive];
         array_splice($lesPiecesDispos, $couleurActive, 1);
         $pieceNonActive = array_shift($lesPiecesDispos);
-        
+
         $pieceAPoser = $piecesActives->getPieceQuantik($posSelection);
-//        $pageHTML .= "<div class ='block-piece'>";
-        $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
-        $pageHTML .= self::getDivPiecesDisponibles($piecesActives, $posSelection);
-//        $pageHTML .= "</div>";
-//        $pageHTML .= "<div class ='block-plateau'>";
+        if ($couleurActive == PieceQuantik::WHITE){
+
+            $pageHTML .= self::getDivPiecesDisponibles($piecesActives, $posSelection);
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+
+        }else{
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+            $pageHTML .= self::getDivPiecesDisponibles($piecesActives, $posSelection);
+
+
+        }
         $pageHTML .= self::getFormPlateauQuantik($plateau, $pieceAPoser, $posSelection);
-//        $pageHTML .= "</div>";
         return $pageHTML . self::getFinHTML();
     }
 
@@ -264,15 +276,15 @@ class QuantikUIGenerator
         $piecesActives = $lesPiecesDispos[$couleurActive];
         unset($lesPiecesDispos[$couleurActive]);
         $pieceNonActive = array_shift($lesPiecesDispos);
-//        $pageHTML .= "<div class ='block-piece'>";
-        $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
-        $pageHTML .= self::getDivPiecesDisponibles($piecesActives);
-//        $pageHTML .= "</div>";
-//        $pageHTML .= "<div class ='block-plateau'>";
+        if ($couleurActive == PieceQuantik::WHITE){
+            $pageHTML .= self::getDivPiecesDisponibles($piecesActives);
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+        }else{
+            $pageHTML .= self::getDivPiecesDisponibles($pieceNonActive);
+            $pageHTML .= self::getDivPiecesDisponibles($piecesActives);
+        }
         $pageHTML .= self::getDivPlateauQuantik($plateau);
-//        $pageHTML .= "</div>";
         return $pageHTML . self::getFinHTML();
-
     }
 
 }
